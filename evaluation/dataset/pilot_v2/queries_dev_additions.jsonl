@@ -1,0 +1,9 @@
+{"query_id":"q13","query":"What is the difference between ExceptionGroup and BaseExceptionGroup, and when can BaseExceptionGroup construct an ExceptionGroup instead?"}
+{"query_id":"q14","query":"How does except* handle an exception group?"}
+{"query_id":"q15","query":"What happens if generator code directly or indirectly raises StopIteration?"}
+{"query_id":"q16","query":"Which source-location details can a Python SyntaxError provide?"}
+{"query_id":"q17","query":"What does SQLAlchemy's AwaitRequired error usually indicate?"}
+{"query_id":"q18","query":"What typically causes SQLAlchemy's MissingGreenlet error when using the ORM asynchronously?"}
+{"query_id":"q19","query":"Why does SQLAlchemy report that a value is required for a bind parameter, and how can the basic case be corrected?"}
+{"query_id":"q20","query":"Why does SQLAlchemy reject a SELECT statement used directly in the FROM clause of another SELECT, and what is the documented fix?"}
+{"query_id":"q21","query":"What usage pattern can cause SQLAlchemy to detect illegal concurrent or reentrant access to a Session or AsyncSession?"}

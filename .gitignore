@@ -1,0 +1,62 @@
+
+# Python environment and cache
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets
+.env
+.streamlit/secrets.toml
+
+# Local data
+data/*
+!data/.gitkeep
+
+# Ignore generated results by default
+results/*
+
+# Include selected pilot v2 results
+!results/pilot_v2/
+results/pilot_v2/*
+
+!results/pilot_v2/pilot_v2_evaluation_report.md
+!results/pilot_v2/answer_review_summary_dev.md
+!results/pilot_v2/answer_eval_retrieval_dev.jsonl
+!results/pilot_v2/answer_eval_generate_dev.jsonl
+!results/pilot_v2/retrieval_metrics_summary.csv
+!results/pilot_v2/retrieval_metrics_per_query.csv
+!results/pilot_v2/reranker_comparison_summary.csv
+!results/pilot_v2/reranker_comparison_per_query.csv
+!results/pilot_v2/reranker_latency_per_query.csv
+
+# Keep held-out evaluation data private until evaluation is complete
+evaluation/dataset/answer_eval_pilot_v2_heldout.jsonl
+evaluation/dataset/queries_pilot_v2_heldout.jsonl
+evaluation/dataset/pilot_v2/answer_eval_heldout_additions.jsonl
+evaluation/dataset/pilot_v2/queries_heldout_additions.jsonl
+
+# Temporarily exclude the full pilot builder and held-out documentation
+evaluation/dataset/pilot_v2/build_pilot_v2.py
+evaluation/dataset/pilot_v2/QUESTION_REVIEW.md
+evaluation/dataset/pilot_v2_manifest.md
+
+# Historical answer-review experiments
+evaluation/answer_review_top13*.csv
+
+# Historical retrieval relevance-label experiments
+evaluation/dataset/assisted_candidate_labels.csv
+evaluation/dataset/candidate_labels*.csv
+
+# Old preliminary report and personal notes
+answer_quality_evaluation_top13.txt
+rough.txt
+evaluation/dataset/pilot_v2/candidate_labels_dev_with_reranker.csv
+evaluation/dataset/pilot_v2/answer_review_pilot_v2_dev.csv
+
+# Local evaluation artifacts containing full documentation passages
+evaluation/dataset/pilot_v2/candidate_labels_dev_full_local.csv
+results/pilot_v2/answer_eval_generate_dev.jsonl
+results/pilot_v2/answer_eval_retrieval_dev.jsonl

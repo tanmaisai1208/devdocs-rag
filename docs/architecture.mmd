@@ -1,0 +1,23 @@
+flowchart TD
+    A[Official documentation sources] --> B[Ingestion and section extraction]
+    B --> C[Cleaning and chunking]
+    C --> D[chunks.jsonl]
+    D --> E[Embedding model: all-MiniLM-L6-v2]
+    E --> F[Local persistent Qdrant collection]
+    D --> G[BM25 lexical index]
+
+    U[User question] --> UI[Streamlit UI]
+    UI --> API[FastAPI]
+    API --> R[Hybrid retriever]
+    R --> H[Dense Qdrant retrieval]
+    R --> I[BM25 retrieval]
+    H --> J[Reciprocal Rank Fusion]
+    I --> J
+    J --> K[Top-k evidence passages]
+    K --> L{Evidence gate}
+    L -->|Insufficient| M[Abstain with no generated answer]
+    L -->|Sufficient| N[Gemini answer generation]
+    N --> O[Answer with source citations]
+    M --> P[API response]
+    O --> P
+    P --> UI

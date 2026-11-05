@@ -1,0 +1,805 @@
+﻿query_id,category,query,expected_facts,expected_sections,expected_source_urls,should_abstain,actual_abstained,run_status,generation_status,evidence_gate_sufficient,evidence_gate_reason,citation_status_validator,invalid_citations,citation_evidence,answer,retrieval_latency_ms,generation_latency_ms,input_tokens,output_tokens,total_tokens,review_fact_coverage,review_factual_correctness,review_citation_support,review_abstention_quality,review_unsupported_claims,review_missing_facts,review_notes
+a01,python_exceptions,What causes a Python exception to have another exception as its context?,"1. Implicit exception chaining occurs when a new exception is raised while another exception is being handled.
+2. The previously handled exception is stored in the new exception's __context__ attribute.",1. Exception context,1. https://docs.python.org/3/library/exceptions.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Built-in Exceptions > Exception context > BaseException. __suppress_context__
+Source: https://docs.python.org/3/library/exceptions.html
+Chunk ID: c09913a7af935cb671ab46c2fbfc2d7bc36c4f379866f60fa7832b883b561233
+Evidence excerpt:
+When raising a new exception while another exception
+is already being handled, the new exceptionâ€™s __context__ attribute is automatically set to the handled
+exception. An exception may be handled when an except or finally clause, or a with statement, is used. This implicit exception context can be
+supplemented with an explicit cause by using from with raise : raise new_exc from original_exc The expression following from must be an exception or None . It
+will be set as __cause__ on the raised exception. Setting __cause__ also implicitly sets the __suppress_context__ attribute to True , so that using raise new_exc from None effectively replaces the old exception with the new one for display
+purposes (e.g. converting KeyError to AttributeError ), while
+leaving the old exception available in __context__ for introspection","A Python exception has another exception automatically set as its context (in its `__context__` attribute) when a new exception is raised while another exception is already being handled [S1].
+
+An exception is considered to be handled when code is executing inside an `except` clause, a `finally` clause, or a `with` statement [S1].",146.96,3726.67,1603,74,1677,2,2,2,correct_answer,,,The answer correctly covers implicit chaining and identifies the __context__ attribute; the cited Python documentation directly supports both points.
+a02,python_exceptions,How does raising an exception with 'from None' affect exception chaining?,"1. Raising an exception with from None suppresses display of the implicit exception context in the default traceback.
+2. The original exception can still remain accessible through __context__.","1. Exception context
+2. __suppress_context__",1. https://docs.python.org/3/library/exceptions.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Built-in Exceptions > Exception context > BaseException. __suppress_context__
+Source: https://docs.python.org/3/library/exceptions.html
+Chunk ID: c09913a7af935cb671ab46c2fbfc2d7bc36c4f379866f60fa7832b883b561233
+Evidence excerpt:
+When raising a new exception while another exception
+is already being handled, the new exceptionâ€™s __context__ attribute is automatically set to the handled
+exception. An exception may be handled when an except or finally clause, or a with statement, is used. This implicit exception context can be
+supplemented with an explicit cause by using from with raise : raise new_exc from original_exc The expression following from must be an exception or None . It
+will be set as __cause__ on the raised exception. Setting __cause__ also implicitly sets the __suppress_context__ attribute to True , so that using raise new_exc from None effectively replaces the old exception with the new one for display
+purposes (e.g. converting KeyError to AttributeError ), while
+leaving the old exception available in __context__ for introspection
+
+---
+
+[S5] Built-in Exceptions > Exception context > BaseException. __suppress_context__
+Source: https://docs.python.org/3/library/exceptions.html
+Chunk ID: 64406fb483551c53584e25a1af75911bc14ef0d8976a4937a1c0d7794eacd8eb
+Evidence excerpt:
+leaving the old exception available in __context__ for introspection
+when debugging. The default traceback display code shows these chained exceptions in
+addition to the traceback for the exception itself. An explicitly chained
+exception in __cause__ is always shown when present. An implicitly
+chained exception in __context__ is shown only if __cause__ is None and __suppress_context__ is false. In either case, the exception itself is always shown after any chained
+exceptions so that the final line of the traceback always shows the last
+exception that was raised.","Raising an exception using `from None` affects exception chaining by:
+
+* **Setting `__cause__` to `None`:** Using `raise new_exc from None` sets the expression (`None`) as the `__cause__` attribute on the raised exception [S1].
+* **Setting `__suppress_context__` to `True`:** Setting `__cause__` implicitly sets the `__suppress_context__` attribute to `True` [S1].
+* **Suppressing implicit chained exception display:** For display purposes in tracebacks, an implicitly chained exception in `__context__` is only shown if `__cause__` is `None` and `__suppress_context__` is false [S5]. Because `__suppress_context__` is set to `True`, using `from None` effectively replaces the old exception with the new one for display purposes (e.g., converting a `KeyError` to an `AttributeError`) [S1].
+* **Preserving introspection:** The old exception remains stored and available in `__context__` for introspection when debugging [S1, S5].",157.83,2859.58,1548,240,1788,2,2,2,correct_answer,,,Accurately covers the suppression of implicit-context display and the preservation of the original exception in __context__.
+a03,python_exceptions,What is the difference between an exception's __cause__ and __context__ in Python?,"1. __cause__ represents an explicitly chained exception, commonly set using raise new_exception from original_exception.
+2. __context__ represents an implicitly chained exception when another exception is already being handled.
+3. Traceback display depends on __cause__ and __suppress_context__.",1. Exception context,1. https://docs.python.org/3/library/exceptions.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Built-in Exceptions > Exception context > BaseException. __suppress_context__
+Source: https://docs.python.org/3/library/exceptions.html
+Chunk ID: c09913a7af935cb671ab46c2fbfc2d7bc36c4f379866f60fa7832b883b561233
+Evidence excerpt:
+When raising a new exception while another exception
+is already being handled, the new exceptionâ€™s __context__ attribute is automatically set to the handled
+exception. An exception may be handled when an except or finally clause, or a with statement, is used. This implicit exception context can be
+supplemented with an explicit cause by using from with raise : raise new_exc from original_exc The expression following from must be an exception or None . It
+will be set as __cause__ on the raised exception. Setting __cause__ also implicitly sets the __suppress_context__ attribute to True , so that using raise new_exc from None effectively replaces the old exception with the new one for display
+purposes (e.g. converting KeyError to AttributeError ), while
+leaving the old exception available in __context__ for introspection
+
+---
+
+[S2] Built-in Exceptions > Exception context > BaseException. __suppress_context__
+Source: https://docs.python.org/3/library/exceptions.html
+Chunk ID: 64406fb483551c53584e25a1af75911bc14ef0d8976a4937a1c0d7794eacd8eb
+Evidence excerpt:
+leaving the old exception available in __context__ for introspection
+when debugging. The default traceback display code shows these chained exceptions in
+addition to the traceback for the exception itself. An explicitly chained
+exception in __cause__ is always shown when present. An implicitly
+chained exception in __context__ is shown only if __cause__ is None and __suppress_context__ is false. In either case, the exception itself is always shown after any chained
+exceptions so that the final line of the traceback always shows the last
+exception that was raised.","The key differences between an exception's `__cause__` and `__context__` attributes in Python involve how they are set and how they affect traceback displays:
+
+* **Setting mechanism (Implicit vs. Explicit):**
+  * `__context__` is set automatically (implicitly) to the handled exception when a new exception is raised while another exception is already being handled (such as inside an `except` or `finally` clause, or a `with` statement) [S1].
+  * `__cause__` is set explicitly when supplementing an exception context using the `raise new_exc from original_exc` syntax, where the expression following `from` is assigned to `__cause__` [S1].
+
+* **Effect on `__suppress_context__`:**
+  * Setting an explicit `__cause__` automatically sets the exception's `__suppress_context__` attribute to `True` [S1].
+
+* **Traceback display behavior:**
+  * An explicitly chained exception in `__cause__` is always shown in the default traceback display when present [S2].
+  * An implicitly chained exception in `__context__` is shown in the traceback only if `__cause__` is `None` and `__suppress_context__` is `False` [S2].",151.52,2788.54,1580,280,1860,2,2,2,correct_answer,,,Distinguishes implicit __context__ from explicit __cause__ and correctly explains traceback display conditions.
+a04,sqlalchemy_pool,Why can SQLAlchemy report that the connection pool is exhausted?,"1. The pool can reach its limit when all allowed connections are checked out.
+2. The limit depends on pool_size and max_overflow.
+3. Connections held too long or not returned to the pool can contribute to exhaustion.","1. QueuePool limit
+2. connection timed out",1. https://docs.sqlalchemy.org/en/20/errors.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S2] Error Messages > Connections and Transactions > QueuePool limit of size <x> overflow <y> reached, connection timed out, timeout <z>
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 3c5696afd62a91d167ee04a90fb05e230b1be8de47b92a75aaacbdcd9ee63af9
+Evidence excerpt:
+play at any time, not including connections that were detached from the
+engine or invalidated. If a request for a new connection arrives and
+30 connections are already in use by other parts of the application,
+the connection pool will block for a fixed period of time,
+before timing out and raising this error message. In order to allow for a higher number of connections be in use at once,
+the pool can be adjusted using the create_engine.pool_size and create_engine.max_overflow parameters as passed to the create_engine() function. The timeout
+to wait for a connection to be available is configured using the create_engine.pool_timeout parameter. The pool can be configured to have unlimited overflow by setting create_engine.max_overflow to the value â€œ-1â€. With this setting,
+the pool will still maintain a fixed pool of connections, however it will
+
+---
+
+[S5] Error Messages > Connections and Transactions > QueuePool limit of size <x> overflow <y> reached, connection timed out, timeout <z>
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 757f43c3ffd0b03015256deeb9816da4c7b754b80580e9e8a95f33be9d6c7f90
+Evidence excerpt:
+does not necessarily establish a new connection to the database at the
+moment the connection object is acquired; it instead consults the
+connection pool for a connection, which will often retrieve an existing
+connection from the pool to be reused. If no connections are available,
+the pool will create a new database connection, but only if the
+pool has not surpassed a configured capacity. The default pool used in most cases is called QueuePool . When
+you ask this pool to give you a connection and none are available, it
+will create a new connection if the total number of connections in play
+are less than a configured value . This value is equal to the pool size plus the max overflow . That means if you have configured
+your engine as: engine = create_engine ( ""mysql+mysqldb://u:p@host/db"" , pool_size = 10 , max_overflow = 20 ) The above Engine will allow at most 30 connections to be in
+
+---
+
+[S3] Error Messages > Connections and Transactions > QueuePool limit of size <x> overflow <y> reached, connection timed out, timeout <z>
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 500dc5c8ee7c44eb2e5a2e49d7d81e47073f2d59ee905ce00a4f63214bab0a66
+Evidence excerpt:
+The application is fielding too many concurrent requests to do work based
+on the configured value for the pool - This is the most straightforward
+cause. If you have
+an application that runs in a thread pool that allows for 30 concurrent
+threads, with one connection in use per thread, if your pool is not configured
+to allow at least 30 connections checked out at once, you will get this
+error once your application receives enough concurrent requests. Solution
+is to raise the limits on the pool or lower the number of concurrent threads. The application is not returning connections to the pool - This is the
+next most common reason, which is that the application is making use of the
+connection pool, but the program is failing to release these
+connections and is instead leaving them open. The connection pool as well
+as the ORM Session do have logic such that when the session and/or
+
+---
+
+[S1] Error Messages > Connections and Transactions > QueuePool limit of size <x> overflow <y> reached, connection timed out, timeout <z>
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 93ed4e2680f33ba8b1fe2e43cda6e9e03edabc456a68730cc2a159a3d264400d
+Evidence excerpt:
+The SQLAlchemy Engine object uses a pool of connections by default - What
+this means is that when one makes use of a SQL database connection resource
+of an Engine object, and then releases that resource,
+the database connection itself remains connected to the database and
+is returned to an internal queue where it can be used again. Even though
+the code may appear to be ending its conversation with the database, in many
+cases the application will still maintain a fixed number of database connections
+that persist until the application ends or the pool is explicitly disposed. Because of the pool, when an application makes use of a SQL database
+connection, most typically from either making use of Engine.connect() or when making queries using an ORM Session , this activity
+does not necessarily establish a new connection to the database at the","SQLAlchemy reports a connection pool exhaustion error (such as `QueuePool limit of size <x> overflow <y> reached, connection timed out, timeout <z>`) when a request for a database connection arrives, but no existing connections are available and the pool cannot create a new one because it has reached its configured maximum capacity [S2, S5]. In this situation, the connection pool blocks for a configured timeout period waiting for a connection to be returned; if no connection becomes available before the timeout expires, SQLAlchemy raises the error [S2].
+
+The main causes for this occurring include:
+
+* **High Concurrent Requests:** The application is handling more concurrent requests or threads than the pool's maximum connection capacity allows [S3]. For example, if 30 concurrent threads each require a connection, but the pool is configured for fewer than 30 total connections, the limit will be reached under load [S3, S5].
+* **Unreleased Connections:** The application acquires connections (via mechanisms such as `Engine.connect()` or an ORM `Session`) but fails to release or return them to the pool, leaving connections checked out and unavailable for subsequent requests [S1, S3, S5].",149.12,2840.11,1848,250,2098,1,2,2,correct_answer,,The limit depends on `pool_size` and `max_overflow`.,"Explains exhaustion, high concurrency, and unreleased connections, but misses explicitly naming `pool_size` and `max_overflow` as the capacity controls."
+a05,sqlalchemy_pool,"Which SQLAlchemy settings control connection pool size, overflow, and timeout?","1. pool_size controls the pool's base number of persistent connections.
+2. max_overflow controls additional connections allowed beyond pool_size.
+3. pool_timeout controls how long a request waits for an available connection before timing out.","1. QueuePool limit
+2. connection timed out",1. https://docs.sqlalchemy.org/en/20/errors.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S2] Error Messages > Connections and Transactions > QueuePool limit of size <x> overflow <y> reached, connection timed out, timeout <z>
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 3c5696afd62a91d167ee04a90fb05e230b1be8de47b92a75aaacbdcd9ee63af9
+Evidence excerpt:
+play at any time, not including connections that were detached from the
+engine or invalidated. If a request for a new connection arrives and
+30 connections are already in use by other parts of the application,
+the connection pool will block for a fixed period of time,
+before timing out and raising this error message. In order to allow for a higher number of connections be in use at once,
+the pool can be adjusted using the create_engine.pool_size and create_engine.max_overflow parameters as passed to the create_engine() function. The timeout
+to wait for a connection to be available is configured using the create_engine.pool_timeout parameter. The pool can be configured to have unlimited overflow by setting create_engine.max_overflow to the value â€œ-1â€. With this setting,
+the pool will still maintain a fixed pool of connections, however it will
+
+---
+
+[S3] Error Messages > Connections and Transactions > QueuePool limit of size <x> overflow <y> reached, connection timed out, timeout <z>
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 757f43c3ffd0b03015256deeb9816da4c7b754b80580e9e8a95f33be9d6c7f90
+Evidence excerpt:
+does not necessarily establish a new connection to the database at the
+moment the connection object is acquired; it instead consults the
+connection pool for a connection, which will often retrieve an existing
+connection from the pool to be reused. If no connections are available,
+the pool will create a new database connection, but only if the
+pool has not surpassed a configured capacity. The default pool used in most cases is called QueuePool . When
+you ask this pool to give you a connection and none are available, it
+will create a new connection if the total number of connections in play
+are less than a configured value . This value is equal to the pool size plus the max overflow . That means if you have configured
+your engine as: engine = create_engine ( ""mysql+mysqldb://u:p@host/db"" , pool_size = 10 , max_overflow = 20 ) The above Engine will allow at most 30 connections to be in","The following parameters passed to `create_engine()` control connection pool size, overflow, and timeout in SQLAlchemy:
+
+* **Pool Size:** Controlled by `create_engine.pool_size` (or `pool_size`), which adjusts the size of the fixed connection pool [S2, S3].
+* **Overflow:** Controlled by `create_engine.max_overflow` (or `max_overflow`), which configures the allowed overflow connections above the pool size [S2, S3]. Setting `max_overflow` to `-1` allows unlimited overflow [S2].
+* **Timeout:** Controlled by `create_engine.pool_timeout` (or `pool_timeout`), which configures the amount of time to wait for an available connection before timing out and raising an error [S2].",140.09,2789.27,1836,329,2165,2,2,2,correct_answer,,,"Explicitly defines `pool_size`, `max_overflow`, and `pool_timeout`; cited excerpts fully support the parameter descriptions."
+a06,sqlalchemy_async,Why must AsyncAdaptedQueuePool be used with an asynchronous SQLAlchemy engine?,"1. The ordinary QueuePool uses thread-based synchronization that is not compatible with asyncio use.
+2. AsyncAdaptedQueuePool uses an asyncio-compatible queue mechanism.","1. QueuePool
+2. asyncio",1. https://docs.sqlalchemy.org/en/20/errors.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S2] Error Messages > Connections and Transactions > Pool class cannot be used with asyncio engine (or vice versa)
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: ace9ade554443b422b825d901835905ae74cf288f274c648e04fa0f967399c26
+Evidence excerpt:
+Error Messages > Connections and Transactions > Pool class cannot be used with asyncio engine (or vice versa)
+
+The QueuePool pool class uses a thread.Lock object internally
+and is not compatible with asyncio. If using the create_async_engine() function to create an AsyncEngine , the appropriate queue pool class
+is AsyncAdaptedQueuePool , which is used automatically and does
+not need to be specified.
+
+In addition to AsyncAdaptedQueuePool , the NullPool and StaticPool pool classes do not use locks and are also
+suitable for use with async engines.
+
+This error is also raised in reverse in the unlikely case that the AsyncAdaptedQueuePool pool class is indicated explicitly with
+the create_engine() function.
+
+See also
+
+Connection Pooling","`AsyncAdaptedQueuePool` must be used with an asynchronous SQLAlchemy engine because the standard `QueuePool` class relies internally on a `thread.Lock` object, which is not compatible with `asyncio` [S2]. Using `create_async_engine()` automatically utilizes `AsyncAdaptedQueuePool` to ensure compatibility with `asyncio` [S2].",123.98,5607.83,1505,188,1693,2,2,2,correct_answer,,,"Correctly explains that standard `QueuePool` uses a `thread.Lock` making it incompatible with `asyncio`, whereas `AsyncAdaptedQueuePool` works with async engines."
+a07,sqlalchemy_transactions,Why must an invalidated SQLAlchemy transaction be rolled back before reconnecting?,"1. After a connection failure invalidates a transaction, SQLAlchemy requires the current transaction state to be cleared.
+2. The application must roll back the failed transaction before the connection or session can be reused normally.",1. Can't reconnect until invalid transaction is rolled back,1. https://docs.sqlalchemy.org/en/20/errors.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Error Messages > Connections and Transactions > Canâ€™t reconnect until invalid transaction is rolled back. Please rollback() fully before proceeding
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 44a699010514a7635878f19c54bf07dce033602e51a9ee625d7351dcb1676bf8
+Evidence excerpt:
+Error Messages > Connections and Transactions > Canâ€™t reconnect until invalid transaction is rolled back. Please rollback() fully before proceeding
+
+This error condition refers to the case where a Connection was
+invalidated, either due to a database disconnect detection or due to an
+explicit call to Connection.invalidate() , but there is still a
+transaction present that was initiated either explicitly by the Connection.begin() method, or due to the connection automatically beginning a transaction as occurs
+in the 2.x series of SQLAlchemy when any SQL statements are emitted. When a connection is invalidated, any Transaction that was in progress is now in an invalid state, and must be explicitly rolled
+back in order to remove it from the Connection .",An invalidated SQLAlchemy transaction must be explicitly rolled back because when a connection is invalidatedâ€”whether from a database disconnect detection or an explicit call to `Connection.invalidate()`â€”any in-progress transaction enters an invalid state [S1]. The transaction must be explicitly rolled back in order to remove it from the `Connection` before proceeding [S1].,111.51,2444.55,1631,210,1841,2,2,2,correct_answer,,,Details how invalidation leaves the transaction in an invalid state and requires a rollback before proceeding.
+a08,postgresql_connections,"Which PostgreSQL connection parameters specify the server hostname, port, database, and user?","1. host specifies the server hostname or address.
+2. port specifies the server port.
+3. dbname specifies the database name.
+4. user specifies the database role or user name.","1. Parameter Key Words
+2. host
+3. port
+4. dbname
+5. user",1. https://www.postgresql.org/docs/current/libpq-connect.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] 32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > port
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: 21e120efeefcc860e3d8cd9b6aa8287cc07c1fdac12b4a374ed86fc525c2d4fb
+Evidence excerpt:
+32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > port
+
+Port number to connect to at the server host, or socket file name extension for Unix-domain connections. If multiple hosts were given in the host or hostaddr parameters, this parameter may specify a comma-separated list of ports of the same length as the host list, or it may specify a single port number to be used for all hosts. An empty string, or an empty item in a comma-separated list, specifies the default port number established when PostgreSQL was built.
+
+---
+
+[S3] 32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.2. Connection URIs
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: bc56d1bf6e10846a66a33350047c06e55366b7d0a7b3a34351078229189ee636
+Evidence excerpt:
+postgresql:///dbname?host=/var/lib/postgresql
+postgresql://%2Fvar%2Flib%2Fpostgresql/dbname
+
+It is possible to specify multiple host components, each with an optional port component, in a single URI. A URI of the form postgresql://host1:port1,host2:port2,host3:port3/ is equivalent to a connection string of the form host=host1,host2,host3 port=port1,port2,port3 . As further described below, each host will be tried in turn until a connection is successfully established.
+
+---
+
+[S4] 32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.2. Connection URIs
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: ff02def15a50616a6a6eea91a06cd32ea3580f4a663e255c1117e9b8c97bf6e3
+Evidence excerpt:
+postgresql://[2001:db8::1234]/database
+
+The host part is interpreted as described for the parameter host . In particular, a Unix-domain socket connection is chosen if the host part is either empty or looks like an absolute path name, otherwise a TCP/IP connection is initiated. Note, however, that the slash is a reserved character in the hierarchical part of the URI. So, to specify a non-standard Unix-domain socket directory, either omit the host part of the URI and specify the host as a named parameter, or percent-encode the path in the host part of the URI:
+
+postgresql:///dbname?host=/var/lib/postgresql
+postgresql://%2Fvar%2Flib%2Fpostgresql/dbname
+
+---
+
+[S5] 32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.2. Connection URIs
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: 17c59851b897aec760f5a156b5e318df06987f24096e3cd167fd9e7a138533da
+Evidence excerpt:
+Values that would normally appear in the hierarchical part of the URI can alternatively be given as named parameters. For example:
+
+postgresql:///mydb?host=localhost&port=5433
+
+All named parameters must match key words listed in Section 32.1.2 , except that for compatibility with JDBC connection URI s, instances of ssl=true are translated into sslmode=require .
+
+The connection URI needs to be encoded with percent-encoding if it includes symbols with special meaning in any of its parts. Here is an example where the equal sign ( = ) is replaced with %3D and the space character with %20 :
+
+postgresql://user@localhost:5433/mydb?options=-c%20synchronous_commit%3Doff
+
+The host part may be either a host name or an IP address. To specify an IPv6 address, enclose it in square brackets:
+
+postgresql://[2001:db8::1234]/database
+
+---
+
+[S2] 32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.2. Connection URIs
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: b614c7303c5fa4cadf30f44c0ccb520277974ef9f17fb5dd854d2bdacfe9adff
+Evidence excerpt:
+32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.2. Connection URIs
+
+The general form for a connection URI is:
+
+postgresql://[ userspec @ ][ hostspec ][ / dbname ][ ? paramspec ] where userspec is: user [ : password ] and hostspec is: [ host ][ : port ][ ,... ] and paramspec is: name = value [ &... ]
+
+The URI scheme designator can be either postgresql:// or postgres:// . Each of the remaining URI parts is optional. The following examples illustrate valid URI syntax:
+
+postgresql://
+postgresql://localhost
+postgresql://localhost:5433
+postgresql://localhost/mydb
+postgresql://user@localhost
+postgresql://user:secret@localhost
+postgresql://other@localhost/otherdb?connect_timeout=10&application_name=myapp
+postgresql://host1:123,host2:456/somedb?target_session_attrs=any&application_name=myapp","Based on the provided documentation, the connection parameters that specify these settings are:
+
+* **Server Hostname:** `host` (or `hostaddr`) specifies the server host name, IP address, or host list [S1, S3, S4, S5].
+* **Port:** `port` specifies the port number to connect to at the server host [S1, S5].
+* **Database:** `dbname` specifies the database name [S2].
+* **User:** `user` specifies the database user name [S2].",137.13,24440.75,1914,633,2547,2,2,2,correct_answer,,,"Identifies `host`/`hostaddr`, `port`, `dbname`, and `user`. The citations support these parameter roles."
+a09,postgresql_connections,How does the PostgreSQL service connection parameter work?,"1. The service parameter selects a named service configuration.
+2. The service configuration can be defined in pg_service.conf and hold additional connection parameters.
+3. Applications can use a service name to centralize connection settings.","1. Parameter Key Words
+2. service",1. https://www.postgresql.org/docs/current/libpq-connect.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] 32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > service
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: e1690abb8a6211b796cbcab7960e27caa2280b57cae5b2f72f61fa04c60014bf
+Evidence excerpt:
+32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > service
+
+Service name to use for additional parameters. It specifies a service name in pg_service.conf that holds additional connection parameters. This allows applications to specify only a service name so connection parameters can be centrally maintained. See Section 32.17 .","The `service` connection parameter specifies a service name defined in a `pg_service.conf` file that contains additional connection parameters [S1].
+
+By using the `service` parameter, applications can specify just the service name, enabling connection parameters to be centrally maintained [S1].",162.28,1572.61,1629,59,1688,2,2,2,correct_answer,,,Directly explains that the `service` parameter selects a named `pg_service.conf` entry for centralized configuration.
+a10,postgresql_security,How can PostgreSQL clients configure TLS or SSL for a connection?,"1. sslmode controls SSL usage and the required level of server-certificate verification.
+2. Options such as sslrootcert, sslcert, and sslkey configure relevant certificate or key files.","1. SSL
+2. sslmode
+3. sslrootcert",1. https://www.postgresql.org/docs/current/libpq-connect.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S5] 32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > sslmode
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: 1568672217a9c125a504cfb177e571b690dc7f42f8750b1f214e61b93f167a99
+Evidence excerpt:
+. sslmode is ignored for Unix domain socket communication. If PostgreSQL is compiled without SSL support, using options require , verify-ca , or verify-full will cause an error, while options allow and prefer will be accepted but libpq will not actually attempt an SSL connection. Note that if GSSAPI encryption is possible, that will be used in preference to SSL encryption, regardless of the value of sslmode . To force use of SSL encryption in an environment that has working GSSAPI infrastructure (such as a Kerberos server), also set gssencmode to disable .
+
+---
+
+[S2] 32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > sslnegotiation
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: d071bcf36b93e0627178a28dd0dc1552c9360427dfc6a107d4b8bc9337353c87
+Evidence excerpt:
+This option controls how SSL encryption is negotiated with the server, if SSL is used. In the default postgres mode, the client first asks the server if SSL is supported. In direct mode, the client starts the standard SSL handshake directly after establishing the TCP/IP connection. Traditional PostgreSQL protocol negotiation is the most flexible with different server configurations. If the server is known to support direct SSL connections then the latter requires one fewer round trip reducing connection latency and also allows the use of protocol agnostic SSL network tools. The direct SSL option was introduced in PostgreSQL version 17. postgres perform PostgreSQL protocol negotiation. This is the default if the option is not provided. direct start SSL handshake directly after establishing the TCP/IP connection
+
+---
+
+[S1] 32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > sslcertmode
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: 08d91c0b27d38a9a509090c71296e95f93674ffb53b553a396b5038f18828b00
+Evidence excerpt:
+This option determines whether a client certificate may be sent to the server, and whether the server is required to request one. There are three modes: disable A client certificate is never sent, even if one is available (default location or provided via sslcert ). allow (default) A certificate may be sent, if the server requests one and the client has one to send. require The server must request a certificate. The connection will fail if the client does not send a certificate and the server successfully authenticates the client anyway. Note sslcertmode=require doesn't add any additional security, since there is no guarantee that the server is validating the certificate correctly; PostgreSQL servers generally request TLS certificates from clients whether they validate them or not. The option may be useful when troubleshooting more complicated TLS setups.
+
+---
+
+[S3] 32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > sslkey
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: 2392dc8391e9d9c375672cbef90cf3053209e496f1fcc332ddcc89bc8eaadd74
+Evidence excerpt:
+32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > sslkey
+
+This parameter specifies the location for the secret key used for the client certificate. It can either specify a file name that will be used instead of the default ~/.postgresql/postgresql.key , or it can specify a key obtained from an external â€œ engine â€ (engines are OpenSSL loadable modules). An external engine specification should consist of a colon-separated engine name and an engine-specific key identifier. This parameter is ignored if an SSL connection is not made.
+
+---
+
+[S4] 32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > sslsni
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: f85f6186ddb943fd58ce12980ba8a2cff78045e7c057ab2e2070c99e713af138
+Evidence excerpt:
+32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > sslsni
+
+If set to 1 (default), libpq sets the TLS extension â€œ Server Name Indication â€ ( SNI ) on SSL-enabled connections. By setting this parameter to 0, this is turned off. The Server Name Indication can be used by SSL-aware proxies to route connections without having to decrypt the SSL stream. (Note that unless the proxy is aware of the PostgreSQL protocol handshake this would require setting sslnegotiation to direct .) However, SNI makes the destination host name appear in cleartext in the network traffic, so it might be undesirable in some cases.","PostgreSQL clients configure TLS/SSL for a connection using connection parameter key words:
+
+* **`sslmode`**: Controls SSL connection behavior (ignored for Unix domain sockets) [S5]. Available options include `require`, `verify-ca`, `verify-full`, `allow`, and `prefer` [S5]. If GSSAPI encryption is available, it takes precedence over SSL regardless of `sslmode`; setting `gssencmode=disable` forces the use of SSL encryption [S5].
+* **`sslnegotiation`**: Controls how SSL encryption is negotiated with the server [S2]:
+  * `postgres` (default): Asks the server first if SSL is supported using PostgreSQL protocol negotiation [S2].
+  * `direct`: Starts the standard SSL handshake directly after establishing the TCP/IP connection, eliminating a round trip and enabling protocol-agnostic SSL tools [S2].
+* **`sslcertmode`**: Determines client certificate sending requirements [S1]:
+  * `allow` (default): A client certificate may be sent if requested by the server and available on the client [S1].
+  * `disable`: A client certificate is never sent [S1].
+  * `require`: Requires the server to request a certificate; the connection fails if the client does not send one [S1].
+* **`sslkey`**: Specifies the secret key location for the client certificate, taking either a file path (overriding default `~/.postgresql/postgresql.key`) or an external OpenSSL engine specification in `engine_name:key_identifier` format [S3].
+* **`sslsni`**: Controls the TLS Server Name Indication (SNI) extension [S4]:
+  * `1` (default): Sets SNI on SSL connections, allowing SSL-aware proxies to route connections without decrypting the stream [S4].
+  * `0`: Disables SNI (useful if host name visibility in cleartext network traffic is undesirable) [S4].",136.03,5702.81,1718,934,2652,1,2,1,correct_answer,,Options such as `sslrootcert` and `sslcert`.,"Covers `sslmode` and `sslkey`, but omits `sslrootcert` and `sslcert`. The server-certificate verification levels are also missing context."
+a11,postgresql_connections,How does PostgreSQL handle connections when multiple hosts are specified?,"1. Multiple hosts can be provided using host lists or multiple host components in a connection URI.
+2. PostgreSQL tries the specified hosts in turn until a connection is successfully established.
+3. Ports can be specified for the corresponding hosts.","1. Multiple Hosts
+2. Connection URIs",1. https://www.postgresql.org/docs/current/libpq-connect.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] 32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.3. Specifying Multiple Hosts
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: 964d0cd96890a08d2b24cdffdcdbc84b5517cda962886170f3a0c2a270cbeba1
+Evidence excerpt:
+When multiple hosts are specified, or when a single host name is translated to multiple addresses, all the hosts and addresses will be tried in order, until one succeeds. If none of the hosts can be reached, the connection fails. If a connection is established successfully, but authentication fails, the remaining hosts in the list are not tried.
+
+If a password file is used, you can have different passwords for different hosts. All the other connection options are the same for every host in the list; it is not possible to e.g., specify different usernames for different hosts.
+
+---
+
+[S3] 32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > load_balance_hosts
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: cb063fe1df57990620d8b1b9b5f5e38dfea0653946b1e49e29f7c0cd4bf560a4
+Evidence excerpt:
+Controls the order in which the client tries to connect to the available hosts and addresses. Once a connection attempt is successful no other hosts and addresses will be tried. This parameter is typically used in combination with multiple host names or a DNS record that returns multiple IPs. This parameter can be used in combination with target_session_attrs to, for example, load balance over standby servers only. Once successfully connected, subsequent queries on the returned connection will all be sent to the same server. There are currently two modes: disable (default) No load balancing across hosts is performed. Hosts are tried in the order in which they are provided and addresses are tried in the order they are received from DNS or a hosts file. random Hosts and addresses are tried in random order
+
+---
+
+[S2] 32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > load_balance_hosts
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: a436e3e794953477a54fe514241bbdb79685c1a27fd433b139ea383bc90c48a3
+Evidence excerpt:
+. random Hosts and addresses are tried in random order. This value is mostly useful when opening multiple connections at the same time, possibly from different machines. This way connections can be load balanced across multiple PostgreSQL servers. While random load balancing, due to its random nature, will almost never result in a completely uniform distribution, it statistically gets quite close. One important aspect here is that this algorithm uses two levels of random choices: First the hosts will be resolved in random order. Then secondly, before resolving the next host, all resolved addresses for the current host will be tried in random order. This behaviour can skew the amount of connections each node gets greatly in certain cases, for instance when some hosts resolve to more addresses than others. But such a skew can also be used on purpose, e.g
+
+---
+
+[S5] 32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.3. Specifying Multiple Hosts
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: 031679a6b3b46617a7eacc6f372e659e6993fad45cc42889a4f667459a08af4b
+Evidence excerpt:
+32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.3. Specifying Multiple Hosts
+
+It is possible to specify multiple hosts to connect to, so that they are tried in the given order. In the Keyword/Value format, the host , hostaddr , and port options accept comma-separated lists of values. The same number of elements must be given in each option that is specified, such that e.g., the first hostaddr corresponds to the first host name, the second hostaddr corresponds to the second host name, and so forth. As an exception, if only one port is specified, it applies to all the hosts.
+
+In the connection URI format, you can list multiple host:port pairs separated by commas in the host component of the URI.
+
+In either format, a single host name can translate to multiple network addresses. A common example of this is a host that has both an IPv4 and an IPv6 address.","When multiple hosts (or single hostnames that resolve to multiple IP addresses) are specified in PostgreSQL connection settings, libpq handles connection attempts according to the following mechanisms:
+
+* **Attempt Order and Connection Behavior**: By default, hosts and their resolved addresses are tried in the order they are specified or received from DNS/hosts files until a connection succeeds [S1, S3]. If a host cannot be reached, the next host or address in the list is tried; however, if a connection is established but authentication fails, the remaining hosts in the list are not tried [S1]. If none of the hosts can be reached, the overall connection fails [S1].
+* **Load Balancing (`load_balance_hosts`)**: The `load_balance_hosts` parameter controls the order in which hosts and addresses are attempted [S3]:
+  * `disable` (default): Performs no load balancing. Hosts are tried in the order provided, and addresses are tried in the order received from DNS or a hosts file [S3].
+  * `random`: Hosts and addresses are tried in random order [S2, S3]. It selects hosts randomly first, then tries all resolved addresses for the selected host in random order before moving to the next host [S2].
+* **Connection Lifecycle**: Once a connection attempt is successful, no further hosts or addresses are tried, and all subsequent queries on that connection are sent to that same server [S3].
+* **Connection Options & Credentials**: Different hosts can have different passwords if a password file is used [S1]. However, all other connection options (such as usernames) apply to every host in the list and cannot be specified individually per host [S1]. When providing comma-separated lists for options like `host`, `hostaddr`, and `port`, the same number of elements must be supplied for each option (with the exception that a single `port` will apply to all hosts) [S5].",146.6,3099.65,1835,403,2238,2,2,2,correct_answer,,,"Explains ordered host attempts, stopping upon success, and matching host/port lists."
+a12,postgresql_connections,How can PostgreSQL clients specify connection parameters using a connection URI or connection string?,"1. PostgreSQL accepts keyword/value connection strings and connection URIs.
+2. Connection URIs can use the postgresql:// or postgres:// scheme.
+3. URI components can specify connection information such as user, host, port, database, and additional parameters.","1. Connection Strings
+2. Connection URIs",1. https://www.postgresql.org/docs/current/libpq-connect.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S4] 32.1. Database Connection Control Functions > Warning > PQconnectdb
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: 34b6b7546366db66a10daa7bdc04a161810d5a3c7c2d717868c66ce68d4a7fe6
+Evidence excerpt:
+32.1. Database Connection Control Functions > Warning > PQconnectdb
+
+Makes a new connection to the database server. PGconn *PQconnectdb(const char *conninfo); This function opens a new database connection using the parameters taken from the string conninfo . The passed string can be empty to use all default parameters, or it can contain one or more parameter settings separated by whitespace, or it can contain a URI . See Section 32.1.1 for details.
+
+---
+
+[S1] 32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.2. Connection URIs
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: b614c7303c5fa4cadf30f44c0ccb520277974ef9f17fb5dd854d2bdacfe9adff
+Evidence excerpt:
+32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.2. Connection URIs
+
+The general form for a connection URI is:
+
+postgresql://[ userspec @ ][ hostspec ][ / dbname ][ ? paramspec ] where userspec is: user [ : password ] and hostspec is: [ host ][ : port ][ ,... ] and paramspec is: name = value [ &... ]
+
+The URI scheme designator can be either postgresql:// or postgres:// . Each of the remaining URI parts is optional. The following examples illustrate valid URI syntax:
+
+postgresql://
+postgresql://localhost
+postgresql://localhost:5433
+postgresql://localhost/mydb
+postgresql://user@localhost
+postgresql://user:secret@localhost
+postgresql://other@localhost/otherdb?connect_timeout=10&application_name=myapp
+postgresql://host1:123,host2:456/somedb?target_session_attrs=any&application_name=myapp
+
+---
+
+[S2] 32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.2. Connection URIs
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: 17c59851b897aec760f5a156b5e318df06987f24096e3cd167fd9e7a138533da
+Evidence excerpt:
+Values that would normally appear in the hierarchical part of the URI can alternatively be given as named parameters. For example:
+
+postgresql:///mydb?host=localhost&port=5433
+
+All named parameters must match key words listed in Section 32.1.2 , except that for compatibility with JDBC connection URI s, instances of ssl=true are translated into sslmode=require .
+
+The connection URI needs to be encoded with percent-encoding if it includes symbols with special meaning in any of its parts. Here is an example where the equal sign ( = ) is replaced with %3D and the space character with %20 :
+
+postgresql://user@localhost:5433/mydb?options=-c%20synchronous_commit%3Doff
+
+The host part may be either a host name or an IP address. To specify an IPv6 address, enclose it in square brackets:
+
+postgresql://[2001:db8::1234]/database
+
+---
+
+[S3] 32.1. Database Connection Control Functions > 32.1.1. Connection Strings > 32.1.1.2. Connection URIs
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: bc56d1bf6e10846a66a33350047c06e55366b7d0a7b3a34351078229189ee636
+Evidence excerpt:
+postgresql:///dbname?host=/var/lib/postgresql
+postgresql://%2Fvar%2Flib%2Fpostgresql/dbname
+
+It is possible to specify multiple host components, each with an optional port component, in a single URI. A URI of the form postgresql://host1:port1,host2:port2,host3:port3/ is equivalent to a connection string of the form host=host1,host2,host3 port=port1,port2,port3 . As further described below, each host will be tried in turn until a connection is successfully established.
+
+---
+
+[S5] 32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > service
+Source: https://www.postgresql.org/docs/current/libpq-connect.html
+Chunk ID: e1690abb8a6211b796cbcab7960e27caa2280b57cae5b2f72f61fa04c60014bf
+Evidence excerpt:
+32.1. Database Connection Control Functions > 32.1.2. Parameter Key Words > service
+
+Service name to use for additional parameters. It specifies a service name in pg_service.conf that holds additional connection parameters. This allows applications to specify only a service name so connection parameters can be centrally maintained. See Section 32.17 .","PostgreSQL clients can specify connection parameters using either keyword/value connection strings or connection URIs passed into connection functions (such as `PQconnectdb`) [S4].
+
+### Connection URIs
+Connection URIs use the scheme designator `postgresql://` or `postgres://` [S1].
+
+* **General URI Syntax:** `postgresql://[userspec@][hostspec][/dbname][?paramspec]` [S1].
+  * `userspec` is specified as `user[:password]` [S1].
+  * `hostspec` is specified as `[host][:port][,...]` [S1].
+  * `dbname` specifies the database name [S1].
+  * `paramspec` provides additional parameters as `name=value[&...]` [S1].
+* **Alternative Named Parameters:** Values usually placed in the hierarchical part of the URI can instead be provided as query parameters (e.g., `postgresql:///mydb?host=localhost&port=5433`) [S2].
+* **Special Characters & Encoding:** If parts of the URI contain symbols with special meanings, they must be percent-encoded (e.g., replacing `=` with `%3D` and spaces with `%20`) [S2].
+* **Host Specifications:**
+  * IPv6 addresses must be enclosed in square brackets (e.g., `postgresql://[2001:db8::1234]/database`) [S2].
+  * Unix-domain socket paths can be passed as a `host` query parameter or percent-encoded in the path [S3].
+  * Multiple hosts and optional ports can be specified using a comma-separated list (e.g., `postgresql://host1:123,host2:456/dbname`) [S1, S3].
+
+### Keyword/Value Connection Strings
+Connection parameters can also be formatted as a string containing one or more `keyword=value` settings separated by whitespace [S4]. For example, multiple hosts and ports can be provided as `host=host1,host2 port=port1,port2` [S3].
+
+### Centralized Service Configurations
+Clients can specify a `service` parameter (or service keyword) that references a service name defined in `pg_service.conf` [S5]. This allows connection parameters to be maintained centrally while applications specify only the service name [S5].",160.16,4260.46,1791,510,2301,2,2,2,correct_answer,,,"Covers keyword/value strings, both URI schemes, and standard URI components."
+a13,out_of_scope,How do I configure MongoDB sharding across multiple Kubernetes clusters?,,,,True,True,complete,skipped_insufficient_evidence,False,score_below_threshold,abstained,[],,I couldn't find enough information in the provided documentation to answer this confidently.,156.56,0.0,,,,NA,NA,NA,correct_abstention,,,Expected out-of-scope question; correctly abstained.
+a14,out_of_scope,What Redis cache invalidation strategy should I use for a high-traffic application?,,,,True,True,complete,skipped_insufficient_evidence,False,score_below_threshold,abstained,[],,I couldn't find enough information in the provided documentation to answer this confidently.,37.93,0.0,,,,NA,NA,NA,correct_abstention,,,Expected out-of-scope question; correctly abstained.
+a15,out_of_scope,How do I troubleshoot Kubernetes pod-to-pod networking across different clusters?,,,,True,True,complete,skipped_insufficient_evidence,False,score_below_threshold,abstained,[],,I couldn't find enough information in the provided documentation to answer this confidently.,125.13,0.0,,,,NA,NA,NA,correct_abstention,,,Expected out-of-scope question; correctly abstained.
+a16,python_exceptions,"What is the difference between ExceptionGroup and BaseExceptionGroup, and when can BaseExceptionGroup construct an ExceptionGroup instead?","1. BaseExceptionGroup extends BaseException and can contain any exception.
+2. ExceptionGroup extends Exception and can contain only exceptions that are subclasses of Exception.
+3. The BaseExceptionGroup constructor returns an ExceptionGroup when all contained exceptions are Exception instances.","1. Built-in Exceptions > Exception groups
+2. Built-in Exceptions > Exception groups > exception BaseExceptionGroup",1. https://docs.python.org/3/library/exceptions.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Built-in Exceptions > Exception groups > exception BaseExceptionGroup ( msg , excs )
+Source: https://docs.python.org/3/library/exceptions.html
+Chunk ID: 2f2906c2a4776c3ab0f65066143b566d1ab03545934c49a40dcd04b3e85f1ce7
+Evidence excerpt:
+Both of these exception types wrap the exceptions in the sequence excs .
+The msg parameter must be a string. The difference between the two
+classes is that BaseExceptionGroup extends BaseException and
+it can wrap any exception, while ExceptionGroup extends Exception and it can only wrap subclasses of Exception . This design is so that except Exception catches an ExceptionGroup but not BaseExceptionGroup . The BaseExceptionGroup constructor returns an ExceptionGroup rather than a BaseExceptionGroup if all contained exceptions are Exception instances, so it can be used to make the selection
+automatic. The ExceptionGroup constructor, on the other hand,
+raises a TypeError if any contained exception is not an Exception subclass. Exception groups are generic over the type of their","Based on the provided documentation:
+
+### Difference between `ExceptionGroup` and `BaseExceptionGroup`
+* **Inheritance:** `BaseExceptionGroup` extends `BaseException`, whereas `ExceptionGroup` extends `Exception` [S1].
+* **Wrapped exceptions:** `BaseExceptionGroup` can wrap any exception, while `ExceptionGroup` can only wrap subclasses of `Exception` [S1]. If any contained exception is not an `Exception` subclass, calling the `ExceptionGroup` constructor raises a `TypeError` [S1].
+* **Handling with `except Exception`:** `except Exception` catches an `ExceptionGroup`, but it does not catch a `BaseExceptionGroup` [S1].
+
+### Automatic Construction of `ExceptionGroup` by `BaseExceptionGroup`
+The `BaseExceptionGroup` constructor will automatically return an `ExceptionGroup` instead of a `BaseExceptionGroup` when all of the contained exceptions passed to it are instances of `Exception` [S1].",50.0,2182.58,1573,203,1776,2,2,2,correct_answer,,,Accurately distinguishes inheritance hierarchies and allowable contained exceptions.
+a17,python_exceptions,How does except* handle an exception group?,"1. Exception groups are used to raise multiple unrelated exceptions together.
+2. The except* clause matches subgroups of an exception group according to the types of the contained exceptions.",1. Built-in Exceptions > Exception groups,1. https://docs.python.org/3/library/exceptions.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Built-in Exceptions > Exception groups
+Source: https://docs.python.org/3/library/exceptions.html
+Chunk ID: 4a87d8f5da7146977baeaf16ad2d72227cc774d19ff94faf943a9625c9ca9e1e
+Evidence excerpt:
+Built-in Exceptions > Exception groups
+
+The following are used when it is necessary to raise multiple unrelated
+exceptions. They are part of the exception hierarchy so they can be
+handled with except like all other exceptions. In addition,
+they are recognised by except* , which matches
+their subgroups based on the types of the contained exceptions.",`except*` handles an exception group by matching its subgroups based on the types of the contained exceptions [S1].,112.12,9018.78,1670,24,1694,1,2,2,correct_answer,,Exception groups are used to raise multiple unrelated exceptions together.,"States that `except*` matches subgroups by contained types, but omits the core fact that exception groups allow multiple unrelated exceptions to be raised together."
+a18,python_exceptions,What happens if generator code directly or indirectly raises StopIteration?,"1. A StopIteration raised directly or indirectly by generator code is converted into a RuntimeError.
+2. The original StopIteration is retained as the cause of the RuntimeError.",1. Built-in Exceptions > Concrete exceptions > exception StopIteration,1. https://docs.python.org/3/library/exceptions.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Built-in Exceptions > Concrete exceptions > exception StopIteration
+Source: https://docs.python.org/3/library/exceptions.html
+Chunk ID: 21aeb22e99cdbf170efcd1714869653a93b10ce25884aaf9172b059e3445c0c2
+Evidence excerpt:
+Raised by built-in function next() and an iterator 's __next__() method to signal that there are no further
+items produced by the iterator. value The exception object has a single attribute value , which is
+given as an argument when constructing the exception, and defaults
+to None . When a generator or coroutine function
+returns, a new StopIteration instance is
+raised, and the value returned by the function is used as the value parameter to the constructor of the exception. If a generator code directly or indirectly raises StopIteration ,
+it is converted into a RuntimeError (retaining the StopIteration as the new exceptionâ€™s cause). Changed in version 3.3: Added value attribute and the ability for generator functions to
+
+---
+
+[S2] Built-in Exceptions > Concrete exceptions > exception StopIteration
+Source: https://docs.python.org/3/library/exceptions.html
+Chunk ID: e303fe2ea86dcd0fbfaf337294986cb80320abff96157101c1de22279dffd105
+Evidence excerpt:
+use it to return a value. Changed in version 3.5: Introduced the RuntimeError transformation via from __future__ import generator_stop , see PEP 479 . Changed in version 3.7: Enable PEP 479 for all code by default: a StopIteration error raised in a generator is transformed into a RuntimeError .","If generator code directly or indirectly raises `StopIteration`, it is converted into a `RuntimeError` [S1, S2]. During this transformation, the original `StopIteration` exception is retained as the cause of the new `RuntimeError` [S1].",169.69,11592.55,1365,54,1419,2,2,2,correct_answer,,,Covers the conversion of `StopIteration` to `RuntimeError` and its retention as the cause.
+a19,python_exceptions,"Which attributes of a Python SyntaxError identify the source file, starting line, starting column, and source text?","1. The filename attribute identifies the file in which the syntax error occurred.
+2. The lineno attribute identifies the line containing the error.
+3. The offset attribute identifies the column where the error occurred.
+4. The text attribute contains the source text associated with the error.
+5. The line number and column offset values are one-indexed.",1. Built-in Exceptions > Concrete exceptions > exception SyntaxError,1. https://docs.python.org/3/library/exceptions.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Built-in Exceptions > Concrete exceptions > exception SyntaxError ( message , details )
+Source: https://docs.python.org/3/library/exceptions.html
+Chunk ID: ba5ab1459af57bcd275fc7d0cf59f731cd14e493827f051919f8d4eaff8312d1
+Evidence excerpt:
+Raised when the parser encounters a syntax error. This may occur in an import statement, in a call to the built-in functions compile() , exec() ,
+or eval() , or when reading the initial script or standard input
+(also interactively). The str() of the exception instance returns only the error message.
+Details is a tuple whose members are also available as separate attributes. filename The name of the file the syntax error occurred in. lineno Which line number in the file the error occurred in. This is
+1-indexed: the first line in the file has a lineno of 1. offset The column in the line where the error occurred. This is
+1-indexed: the first character in the line has an offset of 1. text The source code text involved in the error. end_lineno Which line number in the file the error occurred ends in. This is","The attributes of a Python `SyntaxError` that identify these details are:
+
+* **Source file:** `filename` â€” The name of the file where the syntax error occurred [S1].
+* **Starting line:** `lineno` â€” The line number in the file where the error occurred (1-indexed) [S1].
+* **Starting column:** `offset` â€” The column in the line where the error occurred (1-indexed) [S1].
+* **Source text:** `text` â€” The source code text involved in the error [S1].",137.4,4983.22,1554,301,1855,2,2,2,correct_answer,,,"Identifies `filename`, `lineno`, `offset`, and `text`, accurately reflecting 1-indexed values."
+a20,sqlalchemy_errors,What does SQLAlchemy's AwaitRequired error usually indicate?,"1. SQLAlchemy async mode requires an asynchronous database driver.
+2. AwaitRequired is usually raised when async SQLAlchemy is used with a DBAPI that is not compatible with async operation.",1. Error Messages > AsyncIO Exceptions > AwaitRequired,1. https://docs.sqlalchemy.org/en/20/errors.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Error Messages > AsyncIO Exceptions > AwaitRequired
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 579e2b172c8ffaf8fd54d5698fa13743e51fadc546693c60859f0f477ddf9986
+Evidence excerpt:
+Error Messages > AsyncIO Exceptions > AwaitRequired
+
+The SQLAlchemy async mode requires an async driver to be used to connect to the db.
+This error is usually raised when trying to use the async version of SQLAlchemy
+with a non compatible DBAPI .
+
+See also
+
+Asynchronous I/O (asyncio)",SQLAlchemy's `AwaitRequired` error usually indicates an attempt to use the async version of SQLAlchemy with an incompatible DBAPI (non-async driver) to connect to the database [S1].,126.59,12677.77,1561,40,1601,2,2,2,correct_answer,,,Correctly identifies the usage of a non-async-compatible DBAPI driver with the SQLAlchemy async mode.
+a21,sqlalchemy_errors,What typically causes SQLAlchemy's MissingGreenlet error when using the ORM asynchronously?,"1. MissingGreenlet indicates that an async DBAPI call was initiated outside the greenlet-spawn context normally established by SQLAlchemy's AsyncIO proxy classes.
+2. A common ORM cause is implicit I/O triggered by lazy loading.
+3. The attempted I/O occurs in a calling pattern that does not directly provide for use of await.",1. Error Messages > AsyncIO Exceptions > MissingGreenlet,1. https://docs.sqlalchemy.org/en/20/errors.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Error Messages > AsyncIO Exceptions > MissingGreenlet
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 03c10ce9977f375908baab801a8a737870d4c02e313e4d2a0af7830d469808e9
+Evidence excerpt:
+Error Messages > AsyncIO Exceptions > MissingGreenlet
+
+A call to the async DBAPI was initiated outside the greenlet spawn
+context usually setup by the SQLAlchemy AsyncIO proxy classes. Usually this
+error happens when an IO was attempted in an unexpected place, using a
+calling pattern that does not directly provide for use of the await keyword.
+When using the ORM this is nearly always due to the use of lazy loading ,
+which is not directly supported under asyncio without additional steps
+and/or alternate loader patterns in order to use successfully.
+
+See also
+
+Preventing Implicit IO when Using AsyncSession - covers most ORM scenarios where
+this problem can occur and how to mitigate, including specific patterns
+to use with lazy load scenarios.","When using the ORM asynchronously, SQLAlchemy's `MissingGreenlet` error typically occurs because an I/O call to the async DBAPI was initiated outside the greenlet spawn context set up by SQLAlchemy's AsyncIO proxy classes [S1].
+
+This usually happens when an I/O operation is attempted in an unexpected location using a calling pattern that does not directly support the `await` keyword [S1]. In ORM applications, this is nearly always caused by the use of lazy loading, which is not directly supported under asyncio without additional steps or alternative loader patterns [S1].",135.84,10747.35,1429,121,1550,2,2,2,correct_answer,,,Explains the missing greenlet context and implicit I/O caused by lazy loading.
+a22,sqlalchemy_errors,"Why does SQLAlchemy report that a value is required for a bind parameter, and how can the basic case be corrected?","1. The error occurs when a statement uses bindparam implicitly or explicitly but execution does not provide a value for that parameter.
+2. The basic correction is to pass the required parameter value when executing the statement, for example in a dictionary keyed by the bind parameter name.",1. Error Messages > SQL Expression Language > A value is required for bind parameter <x> (in parameter group <y>),1. https://docs.sqlalchemy.org/en/20/errors.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Error Messages > SQL Expression Language > A value is required for bind parameter <x> (in parameter group <y>)
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 25d81498e4a5d98daf5550d4218a589510f05b82a00e15555ed31addf6350323
+Evidence excerpt:
+Error Messages > SQL Expression Language > A value is required for bind parameter <x> (in parameter group <y>)
+
+This error occurs when a statement makes use of bindparam() either
+implicitly or explicitly and does not provide a value when the statement
+is executed:
+
+stmt = select ( table . c . column ) . where ( table . c . id == bindparam ( ""my_param"" )) result = conn . execute ( stmt )
+
+Above, no value has been provided for the parameter â€œmy_paramâ€. The correct
+approach is to provide a value:
+
+result = conn . execute ( stmt , { ""my_param"" : 12 })
+
+---
+
+[S3] Error Messages > SQL Expression Language > A value is required for bind parameter <x> (in parameter group <y>)
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 5cdef55a7c043162f122c58f78319af367cec77bfbd3f664f3f043acbdf03566
+Evidence excerpt:
+result = conn . execute ( stmt , { ""my_param"" : 12 })
+
+When the message takes the form â€œa value is required for bind parameter <x>
+in parameter group <y>â€, the message is referring to the â€œexecutemanyâ€ style
+of execution. In this case, the statement is typically an INSERT, UPDATE,
+or DELETE and a list of parameters is being passed. In this format, the
+statement may be generated dynamically to include parameter positions for
+every parameter given in the argument list, where it will use the first set of parameters to determine what these should be.
+
+For example, the statement below is calculated based on the first parameter
+set to require the parameters, â€œaâ€, â€œbâ€, and â€œcâ€ - these names determine
+the final string format of the statement which will be used for each
+set of parameters in the list. As the second entry does not contain â€œbâ€,
+this error is generated:
+
+---
+
+[S2] Error Messages > SQL Expression Language > A value is required for bind parameter <x> (in parameter group <y>)
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 7234ba8ebe7ad7b3f73ab56e526ceb6ca0dc1e096ba4a040b99d1b7e5d47094d
+Evidence excerpt:
+m = MetaData () t = Table ( ""t"" , m , Column ( ""a"" , Integer ), Column ( ""b"" , Integer ), Column ( ""c"" , Integer )) e . execute ( t . insert (), [ { ""a"" : 1 , ""b"" : 2 , ""c"" : 3 }, { ""a"" : 2 , ""c"" : 4 }, { ""a"" : 3 , ""b"" : 4 , ""c"" : 5 }, ], )
+
+sqlalchemy . exc . StatementError : ( sqlalchemy . exc . InvalidRequestError ) A value is required for bind parameter 'b' , in parameter group 1 [ SQL : u 'INSERT INTO t (a, b, c) VALUES (?, ?, ?)' ] [ parameters : [{ 'a' : 1 , 'c' : 3 , 'b' : 2 }, { 'a' : 2 , 'c' : 4 }, { 'a' : 3 , 'c' : 5 , 'b' : 4 }]]
+
+Since â€œbâ€ is required, pass it as None so that the INSERT may proceed:
+
+e . execute ( t . insert (), [ { ""a"" : 1 , ""b"" : 2 , ""c"" : 3 }, { ""a"" : 2 , ""b"" : None , ""c"" : 4 }, { ""a"" : 3 , ""b"" : 4 , ""c"" : 5 }, ], )
+
+See also
+
+Sending Parameters","This error occurs when a statement uses a `bindparam()` (either implicitly or explicitly) but no value is provided for that parameter when the statement is executed [S1].
+
+In an ""executemany"" style of executionâ€”such as passing a list of parameter dictionaries to an `INSERT`, `UPDATE`, or `DELETE` statementâ€”SQLAlchemy uses the first dictionary in the list to determine the required parameter names for the formatted statement [S3]. If a subsequent dictionary in the list leaves out one of those parameter keys, SQLAlchemy raises this error [S2, S3].
+
+### How to Correct the Basic Case
+
+* **Single statement execution:** Provide a parameter dictionary containing the expected key-value pair when executing the statement [S1].
+  ```python
+  result = conn.execute(stmt, {""my_param"": 12})
+  ```
+* **Executemany execution:** Ensure every parameter dictionary in the list includes the expected key. If a key has no value for a specific entry, explicitly set its value to `None` so the statement can proceed [S2].
+  ```python
+  conn.execute(
+      stmt,
+      [
+          {""a"": 1, ""b"": 2, ""c"": 3},
+          {""a"": 2, ""b"": None, ""c"": 4},
+          {""a"": 3, ""b"": 4, ""c"": 5},
+      ],
+  )
+  ```",153.47,7808.27,1967,314,2281,2,2,2,correct_answer,,,Explains missing bind parameters and the basic execution-dictionary fix.
+a23,sqlalchemy_errors,"Why does SQLAlchemy reject a SELECT statement used directly in the FROM clause of another SELECT, and what is the documented fix?","1. Since SQLAlchemy 1.4, a SELECT statement is no longer implicitly considered a FromClause.
+2. A SELECT used as a FROM element must first be wrapped in a Subquery, for example by calling .subquery().","1. Error Messages > SQL Expression Language > Expected FROM clause, got Select. To create a FROM clause, use the .subquery() method",1. https://docs.sqlalchemy.org/en/20/errors.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Error Messages > SQL Expression Language > Expected FROM clause, got Select. To create a FROM clause, use the .subquery() method
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 07b02482e086295d506108de46eefa3ca4541ada7cd229d07ea2fb97f386b03c
+Evidence excerpt:
+Error Messages > SQL Expression Language > Expected FROM clause, got Select. To create a FROM clause, use the .subquery() method
+
+This refers to a change made as of SQLAlchemy 1.4 where a SELECT statement as generated
+by a function such as select() , but also including things like unions and textual
+SELECT expressions are no longer considered to be FromClause objects and
+canâ€™t be placed directly in the FROM clause of another SELECT statement without them
+being wrapped in a Subquery first. This is a major conceptual change in the
+Core and the full rationale is discussed at A SELECT statement is no longer implicitly considered to be a FROM clause .
+
+Given an example as:
+
+m = MetaData () t = Table ( ""t"" , m , Column ( ""a"" , Integer ), Column ( ""b"" , Integer ), Column ( ""c"" , Integer )) stmt = select ( t )
+
+---
+
+[S2] Error Messages > SQL Expression Language > Expected FROM clause, got Select. To create a FROM clause, use the .subquery() method
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: f75ac7ef5d2357f5f90a2cfe83fb566d7e241c8127b3cf82c94d1c942cd6e46c
+Evidence excerpt:
+new_stmt_2 = select ( some_table ) . select_from ( some_table . join ( stmt ))
+
+In previous versions of SQLAlchemy, using a SELECT inside of another SELECT
+would produce a parenthesized, unnamed subquery. In most cases, this form of
+SQL is not very useful as databases like MySQL and PostgreSQL require that
+subqueries in FROM clauses have named aliases, which means using the SelectBase.alias() method or as of 1.4 using the SelectBase.subquery() method to produce this. On other databases, it
+is still much clearer for the subquery to have a name to resolve any ambiguity
+on future references to column names inside the subquery.
+
+Beyond the above practical reasons, there are a lot of other SQLAlchemy-oriented
+reasons the change is being made. The correct form of the above two statements
+therefore requires that SelectBase.subquery() is used:","**Why it is rejected**
+As of SQLAlchemy 1.4, `SELECT` statements (including unions and textual `SELECT` expressions) are no longer treated as `FromClause` objects and cannot be placed directly into the `FROM` clause of another `SELECT` statement [S1].
+
+The primary reasons for this design change include:
+* **Database requirements:** In older versions, nesting a `SELECT` directly inside another `SELECT` generated a parenthesized, unnamed subquery [S2]. Most databases, such as MySQL and PostgreSQL, require subqueries in `FROM` clauses to have named aliases [S2].
+* **Clarity:** Giving the subquery an explicit name resolves ambiguity when referencing its column names in future expressions [S2].
+* **Conceptual redesign:** Broad conceptual and internal SQLAlchemy updates were made to explicitly separate `SELECT` constructs from `FROM` clauses [S1, S2].
+
+---
+
+**Documented Fix**
+To use a `SELECT` statement inside a `FROM` clause, you must wrap it in a `Subquery` object [S1]. The documented fix is to call the `.subquery()` method (i.e., `SelectBase.subquery()`) on the inner `SELECT` statement before using it in another `SELECT` or `JOIN` construct [S1, S2].
+
+*(Note: Prior to 1.4, `SelectBase.alias()` was also used to produce a named subquery [S2]).*",134.56,7754.02,1888,313,2201,2,2,2,correct_answer,,,Accurately states the SQLAlchemy 1.4 design change requiring the `.subquery()` wrapper.
+a24,sqlalchemy_errors,What usage pattern can cause SQLAlchemy to detect illegal concurrent or reentrant access to a Session or AsyncSession?,"1. The error-detection system identifies concurrent methods being invoked on the same Session or AsyncSession instance.
+2. Typical problematic patterns include sharing one Session across multiple concurrent threads or one AsyncSession across multiple concurrent tasks.
+3. These usage patterns can leave the objects in an invalid state and lead to difficult-to-debug or driver-level errors.",1. Error Messages > Object Relational Mapping > IllegalStateChangeError and concurrency exceptions,1. https://docs.sqlalchemy.org/en/20/errors.html,False,False,complete,success,True,score_meets_threshold,valid,[],"[S1] Error Messages > Object Relational Mapping > IllegalStateChangeError and concurrency exceptions
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: fbf98efc0b08a9cca54bf5ee133867ba5e2872782af75c2a5c79a5693d4bdc1e
+Evidence excerpt:
+SQLAlchemy 2.0 introduced a new system described at Session raises proactively when illegal concurrent or reentrant access is detected , which
+proactively detects concurrent methods being invoked on an individual instance of
+the Session object and by extension the AsyncSession proxy object.
+These concurrent access calls typically, though not exclusively, would occur
+when a single instance of Session is shared among multiple
+concurrent threads without such access being synchronized, or similarly
+when a single instance of AsyncSession is shared among
+multiple concurrent tasks (such as when using a function like asyncio.gather() ).
+These use patterns are not the appropriate use of these objects, where without
+the proactive warning system SQLAlchemy implements would still otherwise produce
+invalid state within the objects, producing hard-to-debug errors including
+
+---
+
+[S2] Error Messages > Object Relational Mapping > IllegalStateChangeError and concurrency exceptions
+Source: https://docs.sqlalchemy.org/en/20/errors.html
+Chunk ID: 1b0e0265d417db01390d42b4e6b8fc750e365d76123a10e51ac3d4377b2ec550
+Evidence excerpt:
+Instances of Session and AsyncSession are mutable, stateful objects with no built-in synchronization of method calls,
+and represent a single, ongoing database transaction upon a single database
+connection at a time for a particular Engine or AsyncEngine to which the object is bound (note that these objects both support being bound
+to multiple engines at once, however in this case there will still be only one
+connection per engine in play within the scope of a transaction). A single
+database transaction is not an appropriate target for concurrent SQL commands;
+instead, an application that runs concurrent database operations should use
+concurrent transactions. For these objects then it follows that the appropriate
+pattern is Session per thread, or AsyncSession per task.","SQLAlchemy detects illegal concurrent or reentrant access when an un-synchronized or inappropriately shared instance of a `Session` or `AsyncSession` is used across concurrent executions:
+
+* **Session:** Sharing a single instance of `Session` among multiple concurrent threads without synchronizing access [S1].
+* **AsyncSession:** Sharing a single instance of `AsyncSession` among multiple concurrent tasks, such as when passing operations to `asyncio.gather()` [S1].
+
+`Session` and `AsyncSession` are stateful, mutable objects without built-in synchronization [S2]. The recommended pattern is to use one `Session` per thread or one `AsyncSession` per task [S2].",183.61,3092.5,1593,289,1882,1,2,2,correct_answer,,These usage patterns can lead to invalid object states and difficult-to-debug errors.,Identifies sharing `Session`/`AsyncSession` across concurrent threads/tasks but omits the explicit consequences regarding invalid states and driver errors.
+a25,out_of_scope,How do I configure Redis Sentinel quorum and automatic failover for a production cache?,,,,True,True,complete,skipped_insufficient_evidence,False,score_below_threshold,abstained,[],,I couldn't find enough information in the provided documentation to answer this confidently.,223.36,0.0,,,,NA,NA,NA,correct_abstention,,,Expected out-of-scope question; correctly abstained.
+a26,out_of_scope,How can I write a Power BI DAX measure to calculate year-over-year revenue growth?,,,,True,True,complete,skipped_insufficient_evidence,False,score_below_threshold,abstained,[],,I couldn't find enough information in the provided documentation to answer this confidently.,149.29,0.0,,,,NA,NA,NA,correct_abstention,,,Expected out-of-scope question; correctly abstained.
+a27,out_of_scope,How should Apache Kafka consumer groups be configured to reduce consumer lag?,,,,True,True,complete,skipped_insufficient_evidence,False,score_below_threshold,abstained,[],,I couldn't find enough information in the provided documentation to answer this confidently.,292.97,0.0,,,,NA,NA,NA,correct_abstention,,,Expected out-of-scope question; correctly abstained.
+a28,out_of_scope,How can I deploy a Django application to AWS ECS with autoscaling?,,,,True,True,complete,skipped_insufficient_evidence,False,score_below_threshold,abstained,[],,I couldn't find enough information in the provided documentation to answer this confidently.,65.86,0.0,,,,NA,NA,NA,correct_abstention,,,Expected out-of-scope question; correctly abstained.

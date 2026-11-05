@@ -1,0 +1,21 @@
+{"query_id": "q01", "query": "What causes a Python exception to have another exception as its context?"}
+{"query_id": "q02", "query": "How does raising an exception with 'from None' affect exception chaining?"}
+{"query_id": "q03", "query": "What is the difference between an exception's __cause__ and __context__ in Python?"}
+{"query_id": "q04", "query": "Why can SQLAlchemy report that the connection pool is exhausted?"}
+{"query_id": "q05", "query": "Which SQLAlchemy settings control connection pool size, overflow, and timeout?"}
+{"query_id": "q06", "query": "Why must AsyncAdaptedQueuePool be used with an asynchronous SQLAlchemy engine?"}
+{"query_id": "q07", "query": "Why must an invalidated SQLAlchemy transaction be rolled back before reconnecting?"}
+{"query_id": "q08", "query": "Which PostgreSQL connection parameters specify the server hostname, port, database, and user?"}
+{"query_id": "q09", "query": "How does the PostgreSQL service connection parameter work?"}
+{"query_id": "q10", "query": "How can PostgreSQL clients configure TLS or SSL for a connection?"}
+{"query_id": "q11", "query": "How does PostgreSQL handle connections when multiple hosts are specified?"}
+{"query_id": "q12", "query": "How can PostgreSQL clients specify connection parameters using a connection URI or connection string?"}
+{"query_id": "q13", "query": "What is the difference between ExceptionGroup and BaseExceptionGroup, and when can BaseExceptionGroup construct an ExceptionGroup instead?"}
+{"query_id": "q14", "query": "How does except* handle an exception group?"}
+{"query_id": "q15", "query": "What happens if generator code directly or indirectly raises StopIteration?"}
+{"query_id": "q16", "query": "Which source-location details can a Python SyntaxError provide?"}
+{"query_id": "q17", "query": "What does SQLAlchemy's AwaitRequired error usually indicate?"}
+{"query_id": "q18", "query": "What typically causes SQLAlchemy's MissingGreenlet error when using the ORM asynchronously?"}
+{"query_id": "q19", "query": "Why does SQLAlchemy report that a value is required for a bind parameter, and how can the basic case be corrected?"}
+{"query_id": "q20", "query": "Why does SQLAlchemy reject a SELECT statement used directly in the FROM clause of another SELECT, and what is the documented fix?"}
+{"query_id": "q21", "query": "What usage pattern can cause SQLAlchemy to detect illegal concurrent or reentrant access to a Session or AsyncSession?"}
