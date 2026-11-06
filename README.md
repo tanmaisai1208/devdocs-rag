@@ -206,6 +206,22 @@ These are single-run observations, not latency guarantees.
 
 Detailed tables and per-query outputs are in `results/pilot_v2/` and `results/pilot_v2_final_labels/`. See [the evaluation notes](docs/retrieval_evaluation.md) for methodology and limitations.
 
+
+## Held-out evaluation (pilot v2)
+
+The frozen development configuration was evaluated on 12 held-out questions: 9 answerable and 3 out of scope.
+
+The evidence gate made the expected decision on all 12 questions (100%). At the answer level, 8 of 9 answerable questions produced answers, while all 3 out-of-scope questions abstained. Overall abstention agreement was 11/12 (91.7%).
+
+Expected-fact coverage was 18/24 (75.0%). Two answers omitted details that were present in retrieved evidence, while one answer abstained because the retrieved passages did not adequately explain the requested concept.
+
+All eight non-abstained answers passed citation-format validation. Manual inspection of the cited excerpts did not identify obvious unsupported claims, although this was not an independent human-verified factuality assessment.
+
+The held-out evaluation is a small curated test and should not be interpreted as a production-level generalization result. No retrieval, prompt, or evidence-threshold tuning was performed against this test set.
+
+See [the held-out evaluation report](docs/heldout_evaluation.md) for the detailed results and limitations.
+
+
 ## Repository layout
 
 ```text
