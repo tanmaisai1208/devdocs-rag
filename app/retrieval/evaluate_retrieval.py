@@ -12,10 +12,12 @@ INPUT_PATH = (
     / "evaluation"
     / "dataset"
     / "pilot_v2"
-    / "candidate_labels_dev.csv"
+    / "candidate_labels_dev_final.csv"
 )
 
-RESULTS_DIR = PROJECT_ROOT / "results" / "pilot_v2"
+LABEL_COLUMN = "final_relevant"
+
+RESULTS_DIR = PROJECT_ROOT / "results" / "pilot_v2_final_labels"
 PER_QUERY_OUTPUT = RESULTS_DIR / "retrieval_metrics_per_query.csv"
 SUMMARY_OUTPUT = RESULTS_DIR / "retrieval_metrics_summary.csv"
 
@@ -45,7 +47,7 @@ def load_candidates(path):
             "query_id",
             "query",
             "chunk_id",
-            "relevant",
+            LABEL_COLUMN,
             *RETRIEVERS.values(),
         }
 
@@ -67,7 +69,7 @@ def load_candidates(path):
     for line_number, row in enumerate(rows, start=2):
         query_id = row["query_id"].strip()
         chunk_id = row["chunk_id"].strip()
-        label = row["relevant"].strip()
+        label = row[LABEL_COLUMN].strip()
 
         if not query_id or not chunk_id:
             raise ValueError(

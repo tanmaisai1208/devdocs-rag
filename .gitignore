@@ -60,3 +60,12 @@ evaluation/dataset/pilot_v2/answer_review_pilot_v2_dev.csv
 evaluation/dataset/pilot_v2/candidate_labels_dev_full_local.csv
 results/pilot_v2/answer_eval_generate_dev.jsonl
 results/pilot_v2/answer_eval_retrieval_dev.jsonl
+evaluation/dataset/pilot_v2/candidate_labels_dev_human_review_local.csv
+
+# Local consolidated relevance labels
+evaluation/dataset/pilot_v2/candidate_labels_dev_final.csv
+# Include consolidated-label retrieval evaluation results
+!results/pilot_v2_final_labels/
+results/pilot_v2_final_labels/*
+!results/pilot_v2_final_labels/retrieval_metrics_summary.csv
+!results/pilot_v2_final_labels/retrieval_metrics_per_query.csv

@@ -145,25 +145,34 @@ python -m pytest tests -q
 
 The latest local regression run passed **20 tests**. Results may change as code and dependency versions change.
 
+
 ## Development evaluation (pilot v2)
 
-The current development evaluation contains **28 answer-evaluation questions**: 21 answerable questions and 7 questions intended to trigger abstention. The retrieval benchmark contains 21 answerable queries. Held-out evaluation data is intentionally not included in this repository and must not be used for development tuning.
+The development evaluation contains **28 answer-evaluation questions**: 21 answerable questions and 7 questions intended to trigger abstention. The retrieval benchmark contains 21 answerable queries. Held-out evaluation data is intentionally excluded from development tuning.
 
-### Retrieval benchmark
+### Retrieval benchmark — consolidated labels
 
-The development relevance-label file contains 346 query-candidate judgments across 21 queries: 66 labeled relevant and 280 labeled irrelevant. The labels were AI-assisted and have not been independently human-verified. The following metrics are therefore preliminary. Recall is pool-based: its denominator is the relevant material in the judged candidate pool, not every relevant passage in the full corpus. nDCG uses binary relevance labels.
+The consolidated relevance-label dataset contains **346 query-candidate judgments** across 21 queries: 67 relevant and 279 irrelevant.
+
+The labels were produced using two initial AI assessments (ChatGPT and Gemini), followed by a separate Gemini adjudication of the 49 disagreements. The initial assessments agreed on 297 candidates. The remaining 49 were adjudicated, resulting in 23 relevant and 26 irrelevant labels.
+
+These are AI-assisted and AI-adjudicated labels, not human-verified ground truth. Agreement between AI assessments does not establish correctness.
+
+The following retrieval metrics were recalculated using the consolidated labels. Recall is pool-based: its denominator is the relevant material in the judged candidate pool, not every relevant passage in the full corpus. nDCG uses binary relevance labels. Results are macro-averaged across the 21 queries.
 
 | Retriever | Recall@5 | Recall@10 | MRR | nDCG@5 | nDCG@10 |
 |---|---:|---:|---:|---:|---:|
-| Dense | 0.7899 | 0.8913 | 0.8349 | 0.7499 | 0.7747 |
-| BM25 | 0.7849 | 0.8988 | 0.8746 | 0.8120 | 0.8285 |
-| **Hybrid (selected baseline)** | **0.8813** | **0.9845** | **0.9206** | **0.8827** | **0.9085** |
+| Dense | 0.7826 | 0.8916 | 0.8349 | 0.7514 | 0.7750 |
+| BM25 | 0.7378 | 0.9027 | 0.8338 | 0.7810 | 0.8052 |
+| **Hybrid (selected baseline)** | **0.8577** | **0.9694** | **0.9206** | **0.8814** | **0.8957** |
 
-Hybrid retrieval led across all five reported metrics in this development candidate pool. These figures should be rechecked after independent relevance-label review.
+Hybrid retrieval led across all five reported metrics in this development candidate pool. Dense retrieval contributes semantic matching, BM25 contributes lexical matching, and RRF combines their rankings.
 
-### Reranker comparison
+The original retrieval results, calculated using the initial relevance labels, are retained separately in `results/pilot_v2/`. The recalculated results are in `results/pilot_v2_final_labels/`.
 
-The cross-encoder reranker was evaluated on the hybrid top-10 results:
+### Reranker comparison — earlier experiment
+
+The cross-encoder reranker was previously evaluated on hybrid top-10 candidates:
 
 | Metric | Hybrid top-10 | Hybrid + reranker |
 |---|---:|---:|
@@ -172,7 +181,7 @@ The cross-encoder reranker was evaluated on the hybrid top-10 results:
 | nDCG@5 | 0.8827 | 0.8172 |
 | nDCG@10 | 0.9157 | 0.8953 |
 
-The reranker reduced recall and nDCG and did not improve MRR in this run. It is therefore not part of the selected retrieval baseline.
+This is an earlier experiment using the initial relevance-label version. It has not been recalculated with the consolidated labels and is not directly comparable to the updated retrieval benchmark. The reranker reduced Recall@5 and nDCG in that experiment and was not selected for the current baseline.
 
 ### Evidence gate and answer review
 
@@ -191,9 +200,11 @@ These review labels were initially assistant-generated and should be treated as 
 
 ### Performance snapshot
 
-For the recorded development answer-evaluation run, retrieval latency was **143.3 ms median** and **142.1 ms mean** across 28 questions. Generation latency for 21 answerable questions was **4.26 s median** and **6.29 s mean**. Mean token use was approximately **1,943 tokens per generated answer**. These are single-run observations, not latency guarantees.
+For the recorded development answer-evaluation run, retrieval latency was **143.3 ms median** and **142.1 ms mean** across 28 questions. Generation latency for 21 answerable questions was **4.26 s median** and **6.29 s mean**. Mean token use was approximately **1,943 tokens per generated answer**.
 
-Detailed tables and per-query outputs are in `results/pilot_v2/`. See [the evaluation notes](docs/retrieval_evaluation.md) for methodology and limitations.
+These are single-run observations, not latency guarantees.
+
+Detailed tables and per-query outputs are in `results/pilot_v2/` and `results/pilot_v2_final_labels/`. See [the evaluation notes](docs/retrieval_evaluation.md) for methodology and limitations.
 
 ## Repository layout
 
@@ -210,8 +221,9 @@ scripts/                Ingestion, audits, and experiment utilities
 tests/                  Automated test suite
 evaluation/             Development datasets and review files
 docs/                   Architecture and evaluation documentation
-results/pilot_v2/        Selected development evaluation artifacts
-```
+results/pilot_v2/              Original development evaluation artifacts
+results/pilot_v2_final_labels/ Recalculated retrieval metrics using consolidated labels
+```f
 
 Generated `data/`, local vector-store files, held-out datasets, historical experiment runs, virtual environments, and secrets are excluded by `.gitignore`. Selected pilot v2 development results are included so the reported experiments can be inspected.
 
@@ -219,7 +231,7 @@ Generated `data/`, local vector-store files, held-out datasets, historical exper
 
 - The indexed corpus covers only three documentation areas; unsupported topics are expected to trigger abstention.
 - The benchmark is small and curated. Broader query coverage is needed before drawing general conclusions.
-- Retrieval relevance labels and answer-review scores require independent human validation.
+- Consolidated retrieval relevance labels are AI-adjudicated and still require human verification; answer-review scores also need independent human validation.
 - The evidence gate uses a fixed dense-similarity threshold; its behavior should be tested on more varied in-scope and out-of-scope questions.
 - The reranker did not improve the current benchmark results and is not selected as part of the baseline.
 - Repeated latency runs are needed to understand performance variance.
