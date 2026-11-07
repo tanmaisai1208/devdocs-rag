@@ -1,6 +1,8 @@
-# Engineering Knowledge Intelligence Platform
+# DevDocs RAG
 
-A retrieval-augmented generation (RAG) application for answering engineering troubleshooting questions from a curated set of official technical documentation. It combines dense semantic retrieval with BM25 keyword retrieval, merges rankings using Reciprocal Rank Fusion (RRF), checks whether retrieved evidence is sufficient, and either abstains or generates an answer with source citations.
+**Developer Documentation & Troubleshooting Assistant**
+
+A retrieval-augmented generation (RAG) application that answers developer troubleshooting questions using a curated set of official technical documentation. It combines dense semantic retrieval with BM25 keyword retrieval, merges rankings using Reciprocal Rank Fusion (RRF), checks whether retrieved evidence is sufficient, and either abstains or generates an answer with source citations.
 
 > **Project scope:** The current index covers Python exceptions, SQLAlchemy errors and connection pools, and PostgreSQL connection configuration. This is a focused portfolio project, not a general-purpose documentation assistant.
 
