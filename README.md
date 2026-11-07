@@ -2,7 +2,7 @@
 
 A retrieval-augmented generation (RAG) application for answering engineering troubleshooting questions from a curated set of official technical documentation. It combines dense semantic retrieval with BM25 keyword retrieval, merges rankings using Reciprocal Rank Fusion (RRF), checks whether retrieved evidence is sufficient, and either abstains or generates an answer with source citations.
 
-> **Project scope:** the current index covers Python exceptions, SQLAlchemy errors and connection pools, and PostgreSQL connection configuration. This is a focused portfolio project, not a general-purpose documentation assistant.
+> **Project scope:** The current index covers Python exceptions, SQLAlchemy errors and connection pools, and PostgreSQL connection configuration. This is a focused portfolio project, not a general-purpose documentation assistant.
 
 ## Features
 
@@ -84,7 +84,7 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-If PowerShell prevents activation, run the environment's Python directly with `\.venv\Scripts\python.exe`.
+If PowerShell prevents activation, run the environment's Python directly with `.\.venv\Scripts\python.exe`.
 
 Create your local `.env` from the example template:
 
@@ -115,8 +115,7 @@ The development index used for the recorded evaluation contained **335 chunks ac
 In terminal 1, from the project root:
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
-uvicorn api.main:app --app-dir app --reload
+.\.venv\Scripts\python.exe -m uvicorn api.main:app --app-dir app --host 127.0.0.1 --port 8000
 ```
 
 The interactive API schema is available at `http://127.0.0.1:8000/docs`. Check the service with:
@@ -130,8 +129,7 @@ Invoke-RestMethod http://127.0.0.1:8000/health
 In terminal 2:
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
-streamlit run app/ui/streamlit_app.py
+.\.venv\Scripts\python.exe -m streamlit run app/ui/streamlit_app.py
 ```
 
 The UI defaults to the API at `http://127.0.0.1:8000`. Set `RAG_API_URL` in the Streamlit environment to use a different API URL.
@@ -139,12 +137,11 @@ The UI defaults to the API at `http://127.0.0.1:8000`. Set `RAG_API_URL` in the 
 ### 3. Run tests
 
 ```powershell
-python -m compileall -q app scripts tests
-python -m pytest tests -q
+.\.venv\Scripts\python.exe -m compileall -q app scripts tests
+.\.venv\Scripts\python.exe -m pytest tests -q
 ```
 
 The latest local regression run passed **20 tests**. Results may change as code and dependency versions change.
-
 
 ## Development evaluation (pilot v2)
 
@@ -206,7 +203,6 @@ These are single-run observations, not latency guarantees.
 
 Detailed tables and per-query outputs are in `results/pilot_v2/` and `results/pilot_v2_final_labels/`. See [the evaluation notes](docs/retrieval_evaluation.md) for methodology and limitations.
 
-
 ## Held-out evaluation (pilot v2)
 
 The frozen development configuration was evaluated on 12 held-out questions: 9 answerable and 3 out of scope.
@@ -220,7 +216,6 @@ All eight non-abstained answers passed citation-format validation. Manual inspec
 The held-out evaluation is a small curated test and should not be interpreted as a production-level generalization result. No retrieval, prompt, or evidence-threshold tuning was performed against this test set.
 
 See [the held-out evaluation report](docs/heldout_evaluation.md) for the detailed results and limitations.
-
 
 ## Repository layout
 
@@ -239,7 +234,7 @@ evaluation/             Development datasets and review files
 docs/                   Architecture and evaluation documentation
 results/pilot_v2/              Original development evaluation artifacts
 results/pilot_v2_final_labels/ Recalculated retrieval metrics using consolidated labels
-```f
+```
 
 Generated `data/`, local vector-store files, held-out datasets, historical experiment runs, virtual environments, and secrets are excluded by `.gitignore`. Selected pilot v2 development results are included so the reported experiments can be inspected.
 

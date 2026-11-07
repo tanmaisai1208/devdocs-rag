@@ -145,6 +145,54 @@ if result:
         gen_latency = result.get("generation_latency_ms")
         right.metric("Generation latency", "Skipped" if gen_latency is None else f"{gen_latency:.0f} ms")
 
+        st.markdown("**Retrieved passages**")
+
+        passage_details = result.get("retrieved_passage_details") or []
+
+        if not passage_details:
+            st.caption("No retrieved passage details available.")
+        else:
+            for passage in passage_details:
+                rank = passage.get("hybrid_rank", "?")
+                title = passage.get("title") or "Technical documentation"
+                section = passage.get("section") or "Unknown section"
+
+                with st.expander(
+                    f"Passage {rank}: {title} — {section}"
+                ):
+                    st.write(f"**Chunk ID:** {passage.get('chunk_id', 'N/A')}")
+                    st.write(f"**Source:** {passage.get('source') or 'N/A'}")
+                    st.write(f"**Section:** {section}")
+
+                    score_col1, score_col2, score_col3 = st.columns(3)
+
+                    dense_score = passage.get("dense_score")
+                    bm25_score = passage.get("bm25_score")
+                    rrf_score = passage.get("rrf_score")
+
+                    score_col1.metric(
+                        "Dense score",
+                        f"{dense_score:.4f}" if dense_score is not None else "N/A"
+                    )
+                    score_col2.metric(
+                        "BM25 score",
+                        f"{bm25_score:.4f}" if bm25_score is not None else "N/A"
+                    )
+                    score_col3.metric(
+                        "RRF score",
+                        f"{rrf_score:.4f}" if rrf_score is not None else "N/A"
+                    )
+
+                    st.write(
+                        f"**Dense rank:** {passage.get('dense_rank') or 'Not ranked'}"
+                    )
+                    st.write(
+                        f"**BM25 rank:** {passage.get('bm25_rank') or 'Not ranked'}"
+                    )
+
+                    st.markdown("**Passage content**")
+                    st.text(passage.get("content") or "No content available.")
+
         st.markdown("**Evidence gate**")
         gate_status = "PASS" if gate.get("sufficient") else "REJECT"
         st.write(f"Decision: **{gate_status}**")

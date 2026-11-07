@@ -54,6 +54,7 @@ class AskResponse(BaseModel):
     abstained: bool
     evidence_gate: dict[str, Any]
     retrieved_passages: int
+    retrieved_passage_details: list[dict[str, Any]] = Field(default_factory=list)
     retrieval_latency_ms: float
     generation_latency_ms: float | None = None
     model: str | None = None
@@ -135,6 +136,22 @@ class RAGService:
             "abstained": abstained,
             "evidence_gate": evidence_gate,
             "retrieved_passages": len(passages),
+            "retrieved_passage_details": [
+                {
+                    "chunk_id": passage.get("chunk_id"),
+                    "content": passage.get("content"),
+                    "source": passage.get("source"),
+                    "title": passage.get("title"),
+                    "section": passage.get("section"),
+                    "hybrid_rank": passage.get("hybrid_rank"),
+                    "dense_rank": passage.get("dense_rank"),
+                    "bm25_rank": passage.get("bm25_rank"),
+                    "dense_score": passage.get("dense_score"),
+                    "bm25_score": passage.get("bm25_score"),
+                    "rrf_score": passage.get("rrf_score"),
+                }
+                for passage in passages
+            ],
             "retrieval_latency_ms": round(retrieval_latency_ms, 2),
             "generation_latency_ms": (
                 round(float(generation_latency_ms), 2)
